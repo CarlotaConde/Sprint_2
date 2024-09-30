@@ -30,7 +30,7 @@ WHERE
 -- Identifica la companyia amb la mitjana més gran de vendes.
 SELECT 
 	company_name as 'Companyia', 
-    ROUND(AVG(transaction.amount)) as 'Mitijana de vendes'
+    ROUND(AVG(transaction.amount),2) as 'Mitijana de vendes'
 FROM 
     company
 JOIN 
@@ -41,7 +41,7 @@ WHERE
 GROUP BY 
 	company_name
 ORDER BY 
-	ROUND(AVG(transaction.amount)) DESC
+	ROUND(AVG(transaction.amount),2) DESC
 LIMIT 1;
 
 -- Exercici 3
@@ -130,7 +130,7 @@ LIMIT 5;
 -- Quina és la mitjana de vendes per país? Presenta els resultats ordenats de major a menor mitjà.
 SELECT 
 	company.country AS 'Païs',
-    ROUND(AVG(transaction.amount)) AS 'Mitja de ventes'
+    ROUND(AVG(transaction.amount),2) AS 'Mitja de ventes'
 FROM 
 	transaction
 JOIN 
@@ -142,7 +142,7 @@ WHERE
 GROUP BY 
 	company.country
 ORDER BY 
-	ROUND(AVG(transaction.amount)) DESC;
+	ROUND(AVG(transaction.amount),2) DESC;
 
 -- Exercici 3
 -- En la teva empresa, es planteja un nou projecte per a llançar algunes campanyes publicitàries per a fer competència a la companyia "Non Institute". 
