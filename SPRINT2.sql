@@ -7,25 +7,13 @@
 SELECT DISTINCT
     country AS 'Països'
 FROM 
-    company
-JOIN 
-    transaction 
-    ON company.id=transaction.company_id 
-WHERE 
-    declined = 0
-    AND amount >= 1;
+    company;
     
 -- Des de quants països es realitzen les compres.
 SELECT 
-	COUNT(DISTINCT country) as 'Quantitat de països'
+    COUNT(DISTINCT country) as 'Quantitat de països'
 FROM 
-    company
-JOIN 
-    transaction 
-    ON company.id=transaction.company_id 
-WHERE 
-    declined = 0
-    AND amount >= 1;
+    company;
 
 -- Identifica la companyia amb la mitjana més gran de vendes.
 SELECT 
@@ -50,43 +38,48 @@ LIMIT 1;
 -- Mostra totes les transaccions realitzades per empreses d'Alemanya.
 SELECT *
 FROM
-	transaction
+   transaction
 WHERE 
-	company_id IN (SELECT 
-						id
-					FROM 
-						company
-                    WHERE 
-						country='Germany');
+   company_id IN (SELECT 
+			id
+		  FROM 
+			company
+                  WHERE 
+			country='Germany');
                         
 -- transaccions no declinades:                        
 SELECT *
 FROM
-	transaction
+   transaction
 WHERE 
-	company_id IN (SELECT 
-						id
-					FROM 
-						company
-                    WHERE 
-						country='Germany')
+   company_id IN (SELECT 
+			id
+		  FROM 
+			company
+                  WHERE 
+			country='Germany')
 AND transaction.declined = 0;
 
 -- Llista les empreses que han realitzat transaccions per un amount superior a la mitjana de totes les transaccions.
 SELECT 
-	company_name AS 'Empreses'
+    company_name AS 'Empresa',
+    id AS 'ID',
+    phone AS 'Telèfon',
+    email AS 'Correu electrònic',
+    country AS 'Pais',
+    website AS 'Pàgina web'
 FROM 
-	company
+    company
 WHERE
-	id IN (SELECT 
-				company_id
-			FROM 
-				transaction
-			WHERE 
-				amount > (SELECT 
-								AVG(amount)
-							FROM 
-								transaction));
+    id IN (SELECT 
+		company_id
+	   FROM 
+		transaction
+	   WHERE 
+		amount > (SELECT 
+				AVG(amount)
+			  FROM 
+				transaction));
 
 -- Eliminaran del sistema les empreses que no tenen transaccions registrades, entrega el llistat d'aquestes empreses.
 
@@ -95,27 +88,30 @@ WHERE
 FROM
     company
 WHERE NOT EXISTS (SELECT 
-						company_id
-					FROM
-						transaction
-					WHERE
-						transaction.company_id = company.id);
+			company_id
+		  FROM
+			transaction
+		  WHERE
+			transaction.company_id = company.id);
                         
 -- Altre manera:                        
-SELECT id, company_name
-FROM company
-WHERE id NOT IN (SELECT 
-					company_id
-				FROM 
-					transaction);
+SELECT 
+   id, company_name
+FROM 
+   company
+WHERE 
+   id NOT IN (SELECT 
+		  company_id
+	      FROM 
+		  transaction);
 				       
 -- Nivell 2
 
 -- Exercici 1
 -- Identifica els cinc dies que es va generar la quantitat més gran d'ingressos a l'empresa per vendes. Mostra la data de cada transacció juntament amb el total de les vendes.
 SELECT 
-	SUM(amount) AS 'Ingressos',
-	DATE(timestamp) AS 'Data'
+    DATE(timestamp) AS 'Data',
+    SUM(amount) AS 'Ingressos'	
 FROM 
 	transaction
 WHERE
@@ -152,27 +148,34 @@ ORDER BY
 -- JOIN:
 SELECT *
 FROM
-	transaction
+   transaction
 JOIN
-	company
+   company
     ON transaction.company_id=company.id
 WHERE
-	company.Country IN (SELECT country
-						FROM company
-						WHERE company_name = 'Non Institute');
+   company.Country IN (SELECT 
+			  country
+			FROM 
+			   company
+			WHERE 
+			   company_name = 'Non Institute');
     
 -- Subconsulta:
 SELECT *
 FROM
-	transaction
+   transaction
 WHERE 
-	company_id IN (SELECT 
-						id
-					FROM 
-						company
-                    WHERE 
-						company_name = 'Non Institute');
-
+   company_id IN (SELECT 
+			id
+		  FROM 
+			company
+		  WHERE 
+			country IN (SELECT 
+					country
+				    FROM 
+					company
+                                    WHERE 
+					company_name = 'Non Institute'));
 -- Nivell 3
 
 -- Exercici 1
@@ -202,9 +205,9 @@ SELECT
     company.company_name AS 'Companyia',
     COUNT(transaction.id) AS 'Quantitat de transaccions',
 	CASE
-		WHEN COUNT(transaction.id) > 4 THEN 'Més de 4'
-        WHEN COUNT(transaction.id) = 4 THEN 'Igual a 4'
-		ELSE 'Menys de 4'
+	   WHEN COUNT(transaction.id) > 4 THEN 'Més de 4'
+           WHEN COUNT(transaction.id) = 4 THEN 'Igual a 4'
+	ELSE 'Menys de 4'
 	END AS 'Classificació'
 FROM 
     transaction
