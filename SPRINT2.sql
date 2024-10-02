@@ -17,7 +17,7 @@ FROM
 
 -- Identifica la companyia amb la mitjana més gran de vendes.
 SELECT 
-	company_name as 'Companyia', 
+    company_name as 'Companyia', 
     ROUND(AVG(transaction.amount),2) as 'Mitijana de vendes'
 FROM 
     company
@@ -29,7 +29,7 @@ WHERE
 GROUP BY 
 	company_name
 ORDER BY 
-	ROUND(AVG(transaction.amount),2) DESC
+	2 DESC
 LIMIT 1;
 
 -- Exercici 3
